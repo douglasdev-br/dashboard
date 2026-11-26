@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0b0e0c">
+<meta name="description" content="Painel demonstrativo de vendas e faturamento.">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/icon-192.png">
+<title>Dashboard — Painel de Vendas</title>
+<style>
+:root{--bg:#090c0a;--panel:#111713;--panel2:#151d18;--line:#253229;--muted:#8b9a90;--text:#eef5ef;--green:#58e38b;--green2:#1fa85a;--red:#ff7777;--radius:16px}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 75% -20%,#183321 0,transparent 38%),var(--bg);color:var(--text);font:14px Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Arial}
+button{font:inherit;cursor:pointer}.app{max-width:1440px;margin:auto;padding:26px 28px 42px}
+header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:28px}
+.brand{display:flex;align-items:center;gap:12px}.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,#73f6a0,#15934b);display:grid;place-items:center;color:#07140b;font-weight:900;font-size:22px;box-shadow:0 0 28px #36d87633}
+.brand h1{font-size:17px;margin:0;font-weight:750;letter-spacing:.2px}.brand small{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.header-right{display:flex;align-items:center;gap:10px}.live{display:flex;align-items:center;gap:7px;color:#a8eabb;font-size:12px;background:#14251a;border:1px solid #234b30;padding:9px 12px;border-radius:30px}.dot{width:7px;height:7px;background:var(--green);border-radius:50%;box-shadow:0 0 10px var(--green)}
+.ghost,.primary,.period button{border:1px solid var(--line);background:#111813;color:#dce8df;border-radius:10px;padding:10px 13px}.ghost:hover,.period button:hover{border-color:#477b56}.primary{background:var(--green);color:#07140b;border:0;font-weight:750}.primary:hover{background:#79f2a0}
+h2{font-size:21px;margin:0 0 5px}.sub{color:var(--muted);font-size:12px}.topline{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:18px}
+.period{display:flex;gap:5px;background:#0e130f;border:1px solid var(--line);padding:4px;border-radius:12px}.period button{border:0;background:transparent;padding:8px 15px;color:var(--muted);font-size:12px}.period button.active{background:#1d3927;color:#8bf0ad;box-shadow:inset 0 0 0 1px #315b3d}
+.cards{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:15px}.card,.panel{background:linear-gradient(145deg,#131a15,#0f1511);border:1px solid var(--line);border-radius:var(--radius)}
+.card{padding:17px 18px;min-height:125px}.card-head{display:flex;justify-content:space-between;align-items:center;color:#a8b6ac;font-size:12px}.ico{width:30px;height:30px;border-radius:9px;background:#1a3021;color:var(--green);display:grid;place-items:center;font-size:15px}
+.value{font-size:25px;font-weight:760;letter-spacing:-.8px;margin:13px 0 7px}.change{font-size:11px;color:var(--green)}.change span{color:var(--muted);margin-left:4px}
+.content{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(280px,1fr);gap:14px;margin-bottom:15px}.panel{padding:19px}.panel-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px}.panel-title h3{margin:0;font-size:14px}.panel-title small{color:var(--muted);font-size:11px}
+.chart-wrap{height:245px;position:relative}.chart-wrap canvas{width:100%;height:100%}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}.mini{padding:13px;border-radius:12px;background:#121a15;border:1px solid #202d24}.mini label{display:block;color:var(--muted);font-size:11px;margin-bottom:8px}.mini strong{font-size:19px}.mini em{display:block;font-style:normal;color:var(--green);font-size:11px;margin-top:5px}
+.bottom{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(280px,1fr);gap:14px}.table-wrap{overflow:auto}table{width:100%;border-collapse:collapse;white-space:nowrap}th{text-align:left;color:var(--muted);font-size:10px;font-weight:600;padding:10px 8px;border-bottom:1px solid var(--line)}td{padding:12px 8px;border-bottom:1px solid #1e2921;font-size:12px}tr:last-child td{border:0}.product{display:flex;align-items:center;gap:9px}.product-icon{width:30px;height:30px;border-radius:9px;background:#1b2b20;display:grid;place-items:center;color:#7ee99f}.approved{color:#7be99e;background:#183323;padding:5px 8px;border-radius:20px;font-size:10px}
+.activity{display:flex;align-items:center;gap:11px;padding:12px 0;border-bottom:1px solid #1e2921}.activity:last-child{border:0}.avatar{width:34px;height:34px;border-radius:50%;background:#203b29;color:#8df0aa;display:grid;place-items:center;font-weight:700}.activity-info{flex:1}.activity-info strong{font-size:12px;display:block}.activity-info small{font-size:10px;color:var(--muted)}.activity b{font-size:12px;color:var(--green)}
+.notice-controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}.notice-controls button{font-size:11px;padding:9px 11px}.note{color:var(--muted);font-size:10px;line-height:1.5;margin-top:12px}
+.toast-area{position:fixed;right:18px;top:18px;z-index:20;display:grid;gap:9px;width:min(340px,calc(100vw - 36px))}
+.toast{background:#142019;border:1px solid #356344;border-radius:14px;padding:14px 15px;box-shadow:0 12px 45px #0009;animation:slide .25s ease}.toast-head{display:flex;align-items:center;gap:8px;font-weight:700;font-size:12px}.toast-head span:last-child{margin-left:auto;color:#9bad9f;font-weight:400;font-size:10px}.toast-amount{font-size:23px;color:var(--green);font-weight:800;margin:10px 0 2px}.toast-product{font-size:11px;color:#c5d1c8}.check{color:var(--green);font-size:16px}
+@keyframes slide{from{transform:translateX(20px);opacity:0}to{transform:translateX(0);opacity:1}}
+footer{text-align:center;color:#627168;font-size:10px;margin-top:24px}
+@media(max-width:900px){.cards{grid-template-columns:repeat(2,1fr)}.content,.bottom{grid-template-columns:1fr}}
+@media(max-width:560px){.app{padding:18px 13px 30px}header{align-items:flex-start}.header-right .live{display:none}.brand h1{font-size:15px}.topline{align-items:flex-start;flex-direction:column}.period{width:100%;justify-content:space-between}.period button{flex:1;padding:9px 5px}.cards{gap:9px}.card{padding:13px;min-height:116px}.value{font-size:21px}.panel{padding:15px}.chart-wrap{height:210px}.header-right .ghost{padding:9px}.stats{gap:8px}}
+</style>
+</head>
+<body>
+<div class="toast-area" id="toastArea"></div>
+<div class="app">
+<header>
+  <div class="brand"><div class="logo">S</div><div><h1>SALES<span style="color:var(--green)">.</span> DASHBOARD</h1><small>Painel demonstrativo · Visão geral</small></div></div>
+  <div class="header-right"><div class="live"><i class="dot"></i> PAINEL ONLINE</div><button class="ghost" id="soundToggle">🔔 Som ligado</button></div>
+</header>
+<div class="topline">
+  <div><h2>Visão geral</h2><div class="sub" id="periodSubtitle">Acompanhe o desempenho de hoje</div></div>
+  <div class="period" role="group" aria-label="Selecionar período">
+    <button class="active" data-period="today">Hoje</button><button data-period="week">Semana</button><button data-period="month">Mês</button><button data-period="total">Total</button>
+  </div>
+</div>
+<section class="cards">
+  <div class="card"><div class="card-head">Faturamento <span class="ico">↗</span></div><div class="value" id="revenue">R$ 980,70</div><div class="change">↑ 12,8% <span>vs. período anterior</span></div></div>
+  <div class="card"><div class="card-head">Vendas aprovadas <span class="ico">▣</span></div><div class="value" id="sales">24</div><div class="change">↑ 8,4% <span>vs. período anterior</span></div></div>
+  <div class="card"><div class="card-head">Leads captados <span class="ico">♙</span></div><div class="value" id="leads">186</div><div class="change">↑ 16,2% <span>vs. período anterior</span></div></div>
+  <div class="card"><div class="card-head">Ticket médio <span class="ico">◈</span></div><div class="value" id="ticket">R$ 40,86</div><div class="change">↑ 3,1% <span>vs. período anterior</span></div></div>
+</section>
+<section class="content">
+  <div class="panel">
+    <div class="panel-title"><h3>Desempenho de faturamento</h3><small id="chartCaption">Hoje · por hora</small></div>
+    <div class="chart-wrap"><canvas id="chart"></canvas></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title"><h3>Indicadores</h3><small>Resumo do período</small></div>
+    <div class="stats">
+      <div class="mini"><label>Taxa de conversão</label><strong id="conversion">12,90%</strong><em>↑ 1,2%</em></div>
+      <div class="mini"><label>Reembolsos</label><strong id="refunds">1</strong><em style="color:var(--muted)">Dentro da média</em></div>
+      <div class="mini"><label>Vendas pendentes</label><strong id="pending">3</strong><em style="color:var(--muted)">Aguardando pagamento</em></div>
+      <div class="mini"><label>Faturamento líquido</label><strong id="net">R$ 931,67</strong><em>Após ajustes</em></div>
+    </div>
+  </div>
+</section>
+<section class="bottom">
+  <div class="panel">
+    <div class="panel-title"><h3>Últimas vendas</h3><small id="salesCaption">Atualizado agora</small></div>
+    <div class="table-wrap"><table><thead><tr><th>PRODUTO</th><th>DATA</th><th>VALOR</th><th>STATUS</th></tr></thead><tbody id="salesRows"></tbody></table></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title"><h3>Notificações de venda</h3><small>Alertas no dispositivo</small></div>
+    <div class="activity"><div class="avatar">3×</div><div class="activity-info"><strong>Sequência de notificações</strong><small>3 alertas seguidos a cada 5 minutos</small></div><b id="noticeStatus">Pausado</b></div>
+    <div class="notice-controls"><button class="primary" id="startNotices">▶ Iniciar alertas</button><button class="ghost" id="pauseNotices">Ⅱ Pausar</button><button class="ghost" id="testNotice">Testar notificação</button></div>
+    <p class="note">Para receber notificações do navegador, permita o envio quando solicitado. Os alertas automáticos funcionam enquanto esta página estiver aberta; o navegador pode limitar notificações e áudio em segundo plano. O som é gerado nesta página.</p>
+  </div>
+</section>
+<footer>PAINEL DEMONSTRATIVO · Dados fictícios para visualização de interface</footer>
+</div>
+<script>
+const data={
+ today:{revenue:980.70,sales:24,leads:186,ticket:40.86,conversion:12.90,refunds:1,pending:3,net:931.67,subtitle:'Acompanhe o desempenho de hoje',caption:'Hoje · por hora',labels:['08h','09h','10h','11h','12h','13h','14h'],values:[45,112,85,190,140,218,190.70]},
+ week:{revenue:7842.60,sales:176,leads:1286,ticket:44.56,conversion:13.69,refunds:5,pending:12,net:7450.47,subtitle:'Acompanhe o desempenho desta semana',caption:'Semana · por dia',labels:['Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],values:[820,960,1040,780,1260,1490,1492.60]},
+ month:{revenue:32450.80,sales:738,leads:5412,ticket:43.97,conversion:13.64,refunds:18,pending:34,net:30828.26,subtitle:'Acompanhe o desempenho deste mês',caption:'Mês · por semana',labels:['Sem. 1','Sem. 2','Sem. 3','Sem. 4'],values:[7100,8250,7900,9200.80]},
+ total:{revenue:150000,sales:3425,leads:25870,ticket:43.80,conversion:13.24,refunds:86,pending:0,net:142500,subtitle:'Visão consolidada de todo o período',caption:'Total · por mês',labels:['Jun','Jul','Ago','Set','Out','Nov'],values:[16500,21800,24500,27900,27100,32100]}
+};
+const fmt=n=>n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const int=n=>n.toLocaleString('pt-BR');
+let current='today';
+document.querySelectorAll('.period button').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.period button').forEach(x=>x.classList.remove('active'));b.classList.add('active');current=b.dataset.period;render()}));
+function render(){const d=data[current];document.getElementById('periodSubtitle').textContent=d.subtitle;document.getElementById('chartCaption').textContent=d.caption;
+document.getElementById('revenue').textContent=fmt(d.revenue);document.getElementById('sales').textContent=int(d.sales);document.getElementById('leads').textContent=int(d.leads);document.getElementById('ticket').textContent=fmt(d.ticket);document.getElementById('conversion').textContent=d.conversion.toFixed(2).replace('.',',')+'%';document.getElementById('refunds').textContent=int(d.refunds);document.getElementById('pending').textContent=int(d.pending);document.getElementById('net').textContent=fmt(d.net);drawChart(d);renderRows()}
+function drawChart(d){const c=document.getElementById('chart'),ctx=c.getContext('2d'),rect=c.getBoundingClientRect(),ratio=window.devicePixelRatio||1;c.width=rect.width*ratio;c.height=rect.height*ratio;ctx.scale(ratio,ratio);const w=rect.width,h=rect.height,p={l:48,r:12,t:12,b:30},cw=w-p.l-p.r,ch=h-p.t-p.b,max=Math.max(...d.values)*1.18;ctx.font='10px system-ui';ctx.strokeStyle='#26352b';ctx.fillStyle='#829187';ctx.lineWidth=1;
+for(let i=0;i<4;i++){let y=p.t+ch*i/3;ctx.beginPath();ctx.moveTo(p.l,y);ctx.lineTo(w-p.r,y);ctx.stroke();ctx.fillText(fmt(max*(1-i/3)).replace('R$ ','R$'),2,y+3)}
+const pts=d.values.map((v,i)=>({x:p.l+(d.values.length===1?cw/2:i*cw/(d.values.length-1)),y:p.t+ch-(v/max)*ch}));
+let grad=ctx.createLinearGradient(0,p.t,0,h);grad.addColorStop(0,'rgba(79,225,132,.28)');grad.addColorStop(1,'rgba(79,225,132,0)');ctx.beginPath();pts.forEach((q,i)=>i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y));ctx.lineTo(pts[pts.length-1].x,p.t+ch);ctx.lineTo(pts[0].x,p.t+ch);ctx.closePath();ctx.fillStyle=grad;ctx.fill();
+ctx.beginPath();pts.forEach((q,i)=>i?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y));ctx.strokeStyle='#58e38b';ctx.lineWidth=2.5;ctx.stroke();pts.forEach(q=>{ctx.beginPath();ctx.arc(q.x,q.y,3,0,Math.PI*2);ctx.fillStyle='#58e38b';ctx.fill()});
+d.labels.forEach((lab,i)=>{let x=p.l+(d.labels.length===1?cw/2:i*cw/(d.labels.length-1));ctx.fillStyle='#829187';ctx.textAlign='center';ctx.fillText(lab,x,h-8)})}
+const products=['Acesso Premium','Pacote Completo','Conteúdo Exclusivo','Plano VIP','Assinatura Mensal','Combo Especial'];const amounts=[49.90,29.90,39.90,19.90,59.90,34.90];const times=['14:42','14:36','14:21','13:58','13:44','13:17','12:52','12:30'];
+function renderRows(){let n=current==='today'?8:current==='week'?8:current==='month'?8:8;document.getElementById('salesRows').innerHTML=Array.from({length:n},(_,i)=>{let idx=(i+current.length)%products.length;let dt=current==='today'?times[i]:(26-i)+'/11';return `<tr><td><div class="product"><span class="product-icon">◈</span>${products[idx]}</div></td><td>${dt}</td><td><b>${fmt(amounts[(i+2)%amounts.length])}</b></td><td><span class="approved">Aprovada</span></td></tr>`}).join('')}
+window.addEventListener('resize',()=>drawChart(data[current]));render();
+let soundOn=true,noticeTimer=null,audioCtx=null,sequenceTimers=[];
+const soundBtn=document.getElementById('soundToggle');soundBtn.onclick=()=>{soundOn=!soundOn;soundBtn.textContent=soundOn?'🔔 Som ligado':'🔕 Som desligado'};
+function beep(){if(!soundOn)return;try{audioCtx=audioCtx||new(window.AudioContext||window.webkitAudioContext)();if(audioCtx.state==='suspended')audioCtx.resume();[0,180,360].forEach((delay,i)=>{let o=audioCtx.createOscillator(),g=audioCtx.createGain();o.type='sine';o.frequency.value=[880,1175,1046][i];g.gain.setValueAtTime(.0001,audioCtx.currentTime+delay/1000);g.gain.exponentialRampToValueAtTime(.12,audioCtx.currentTime+delay/1000+.02);g.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+delay/1000+.19);o.connect(g);g.connect(audioCtx.destination);o.start(audioCtx.currentTime+delay/1000);o.stop(audioCtx.currentTime+delay/1000+.21)})}catch(e){}}
+function showToast(){const amount=amounts[Math.floor(Math.random()*amounts.length)],product=products[Math.floor(Math.random()*products.length)];const area=document.getElementById('toastArea'),el=document.createElement('div');el.className='toast';el.innerHTML=`<div class="toast-head"><span class="check">✓</span> Nova venda aprovada <span>Agora</span></div><div class="toast-amount">+ ${fmt(amount)}</div><div class="toast-product">${product} · Pagamento aprovado</div>`;area.prepend(el);beep();if('Notification'in window&&Notification.permission==='granted'){try{new Notification('Nova venda aprovada',{body:`${fmt(amount)} · ${product}`,tag:'sales-'+Date.now()})}catch(e){}}setTimeout(()=>el.remove(),6500)}
+async function requestPermission(){if(!('Notification'in window))return false;if(Notification.permission==='granted')return true;if(Notification.permission==='denied'){alert('As notificações estão bloqueadas no navegador. Altere a permissão nas configurações do site.');return false}return (await Notification.requestPermission())==='granted'}
+function startCycle(){showToast();sequenceTimers.forEach(clearTimeout);sequenceTimers=[setTimeout(showToast,1200),setTimeout(showToast,2400)]}
+document.getElementById('startNotices').onclick=async()=>{if(noticeTimer)return;await requestPermission();startCycle();noticeTimer=setInterval(startCycle,300000);document.getElementById('noticeStatus').textContent='Ativo';document.getElementById('noticeStatus').style.color='var(--green)'};
+document.getElementById('pauseNotices').onclick=()=>{if(noticeTimer)clearInterval(noticeTimer);noticeTimer=null;sequenceTimers.forEach(clearTimeout);sequenceTimers=[];document.getElementById('noticeStatus').textContent='Pausado';document.getElementById('noticeStatus').style.color='var(--muted)'};
+document.getElementById('testNotice').onclick=()=>{showToast()};
+</script>
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("./sw.js").catch(console.error));
+}
+</script>
+</body></html>

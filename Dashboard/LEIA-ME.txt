@@ -1,0 +1,20 @@
+# Sales Dashboard PWA
+
+## O que já está incluído
+- Dashboard responsiva com dados demonstrativos.
+- Manifesto PWA e ícones para instalação na tela inicial.
+- Service worker com cache básico para reabrir a interface offline.
+- Suporte no service worker para receber notificações Push enviadas por um servidor.
+
+## Publicar
+1. Extraia esta pasta.
+2. Envie os arquivos para um repositório GitHub.
+3. Importe o repositório no Vercel (ou outro host estático com HTTPS).
+4. Abra o endereço HTTPS no Chrome do Android.
+5. Menu ⋮ > Instalar app (ou Adicionar à tela inicial).
+
+## Limite importante das notificações
+Os alertas que a página agenda com JavaScript só funcionam enquanto a página/app estiver em execução e o sistema permitir atividade em segundo plano.
+O service worker aqui já consegue EXIBIR um evento Push recebido, mas ainda não existe um servidor que envie Push a cada 5 minutos. Para isso é necessário configurar Web Push (VAPID), guardar a inscrição do dispositivo e executar um agendador no backend. Não há envio automático em segundo plano apenas por instalar esta PWA.
+
+Os dados e notificações de venda desta interface são demonstrativos/fictícios.
